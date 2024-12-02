@@ -17,27 +17,24 @@ inputList = file_reader(os.path.join(PATH, 'day2_test.txt'))
 
 SAFE_REPORT_COUNTER = 0
 
+badReportDict = {}
+
 for rawReport in inputList:
     reportList = rawReport.strip('\n').split(' ')
     INCREMENT_COUNTER = 0
     DECREMENT_COUNTER = 0
-    print(reportList)
-    for i, level in enumerate(reportList):
+    for i, currentValue in enumerate(reportList):
         if i+1 < len(reportList):
-            value = int(reportList[i+1]) - int(level)
-            if value < 0 and (value <= -1 and value >= -3):
+            deltaValue = int(reportList[i+1]) - int(currentValue)
+            if -1 >= deltaValue >= -3 :
                 DECREMENT_COUNTER += 1
-                print("bar")
-            elif value > 0 and (value >= 1 and value <= 3):
+            elif 1 <= deltaValue <= 3:
                 INCREMENT_COUNTER += 1
-                print("foo")
             else:
-                print("unsafe")
+                badReportDict[rawReport.strip('\n')] = i # not all bad values are added somehow ?
                 break
         else:
             if (DECREMENT_COUNTER > 0 and INCREMENT_COUNTER == 0) or (INCREMENT_COUNTER > 0 and DECREMENT_COUNTER == 0):
                 SAFE_REPORT_COUNTER += 1
-                print("safe")
-            print("foobar")
 
-print(SAFE_REPORT_COUNTER)
+print("Part1: ",SAFE_REPORT_COUNTER)
