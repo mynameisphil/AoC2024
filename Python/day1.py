@@ -7,17 +7,16 @@ import os
 PATH = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 # Using readlines() https://www.geeksforgeeks.org/read-a-file-line-by-line-in-python/
 
-
 def file_reader(file_path):
     """Reading and returning a files content"""
     with open(file_path, encoding="utf-8") as file:
         contents = file.readlines()
     return contents
 
-inputList = file_reader(os.path.join(PATH, 'day1.txt'))
+inputList = file_reader(os.path.join(PATH, 'day1_test.txt'))
 
-totalDistance = 0
-similarityScore = 0
+TOTAL_DISTANCE = 0
+SIMILARITY_SCORE = 0
 leftList = []
 rightList = []
 for x in inputList:
@@ -27,19 +26,16 @@ for x in inputList:
 leftList.sort()
 rightList.sort()
 
-
 if len(leftList) == len(rightList):
-    for i in range(0,len(leftList)):
-        a = leftList[i]
+    for i, a in enumerate(leftList):
         b = rightList[i]
         if a > b:
-            totalDistance += a - b
+            TOTAL_DISTANCE += a - b
         else:
-            totalDistance += b - a
-        similarityScore += int(a) * int(rightList.count(a))
-    print("Part1: ", totalDistance)
-    print("Part2: ", similarityScore)
+            TOTAL_DISTANCE += b - a
+        SIMILARITY_SCORE += int(a) * int(rightList.count(a))
+    print("Part1: ", TOTAL_DISTANCE)
+    print("Part2: ", SIMILARITY_SCORE)
 else:
     print("Foo")
     
-
