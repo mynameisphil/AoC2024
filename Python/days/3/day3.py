@@ -66,5 +66,5 @@ for line in matchList:
     number_a = int(result[0].split(',')[0])
     number_b = int(result[0].split(',')[1])
     PART2_RESULT += number_a * number_b
-    
+
 print("Part2:",PART2_RESULT)
