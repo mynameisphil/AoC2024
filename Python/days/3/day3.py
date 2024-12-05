@@ -14,20 +14,6 @@ def file_reader(file_name):
         contents = file.readlines()
     return contents
 
-def get_matches_list(string_input, pattern):
-    """PyLint is annoying dear lord"""
-    return re.findall(pattern, string_input)
-
-def get_matches_as_tuple(input_string, pattern):
-    """PyLint is annoying dear lord"""
-    matches = re.finditer(pattern, input_string)
-    match_indices = []
-    for match in matches:
-        matched_char = match.group()
-        index = match.start()
-        match_indices.append({matched_char : index})
-    return tuple(match_indices)
-
 PART1_REGEX = r"mul[(]\d{1,3}[,]\d{1,3}[)]"
 PART1_SUB_REGEX = r"\d{1,3}[,]\d{1,3}"
 
@@ -37,8 +23,8 @@ PART1_RESULT = 0
 
 
 for line in inputList:
-    for instruction in get_matches_list(line,PART1_REGEX):
-        result = get_matches_list(instruction,PART1_SUB_REGEX)
+    for instruction in re.findall(PART1_REGEX,line):
+        result = re.findall(PART1_SUB_REGEX,instruction)
         number_a = int(result[0].split(',')[0])
         number_b = int(result[0].split(',')[1])
         PART1_RESULT += number_a * number_b
@@ -53,7 +39,7 @@ DONT_FLAG = False
 PART2_RESULT = 0
 
 for line in inputList:
-    for instruction in get_matches_list(line,PART2_REGEX):
+    for instruction in re.findall(PART2_REGEX,line):
         if instruction == "don't()":
             DONT_FLAG = True
         if instruction == "do()":
@@ -62,7 +48,7 @@ for line in inputList:
             matchList.append(instruction)
 
 for line in matchList:
-    result = get_matches_list(line,PART1_SUB_REGEX)
+    result = re.findall(PART1_SUB_REGEX,line)
     number_a = int(result[0].split(',')[0])
     number_b = int(result[0].split(',')[1])
     PART2_RESULT += number_a * number_b
