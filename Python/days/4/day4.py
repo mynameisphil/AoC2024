@@ -68,36 +68,34 @@ def check_anti_diagonal(input_list,pattern):
                     count = 1
     return count
 
-file_as_list = file_reader('day4.txt')
+def check_part2(input_list):
+    """Pattern is 3x3 MAS in any direction - for it to be valid it needs to have 2 occurences"""
+    count = 0
+    if input_list[1][1] == 'A':
+        diagonal = input_list[0][0] + input_list[1][1] + input_list[2][2]
+        anti_diagonal = input_list[2][0] + input_list[1][1] + input_list[0][2]
+        if diagonal in ('SAM','MAS') and anti_diagonal in ('SAM','MAS'):
+            count = 1
+    return count
+
+file_as_list = file_reader('day4_test.txt')
 
 MAX_COLUMNS = len(file_as_list[0].strip('\n'))
 MAX_HEIGHT = len(file_as_list)
-TOTAL_COUNT = 0
 
-# Really crude but quick "initial 4 lines population and processing"
-# Didn't want to change the logic at line 96 for that
-buffer = []
-for inputLine in file_as_list[:4]:
-    buffer.append(inputLine.strip('\n'))
-    TOTAL_COUNT+= inputLine.count("XMAS") + inputLine.count("SAMX")
 
-TOTAL_COUNT += check_vertical(buffer,"XMAS") + check_vertical(buffer,"SAMX")
+def part1():
+    """Solving for Part1"""
+    # Really crude but quick "initial 4 lines population and processing"
+    # Didn't want to change the logic at line 96 for that
+    buffer = []
+    total_count = 0
+    for input_line in file_as_list[:4]:
+        buffer.append(input_line.strip('\n'))
+        total_count+= input_line.count("XMAS") + input_line.count("SAMX")
 
-for i in range(0,MAX_COLUMNS):
-    frame = []
-    for buffer_line in buffer:
-        if i+4 > MAX_COLUMNS:
-            break
-        frame.append(buffer_line[i:4+i])
-    if len(frame) == 4:
-        TOTAL_COUNT += check_anti_diagonal(frame,"XMAS") + check_diagonal(frame,"XMAS")
-        TOTAL_COUNT += check_anti_diagonal(frame,"SAMX") + check_diagonal(frame,"SAMX")
+    total_count += check_vertical(buffer,"XMAS") + check_vertical(buffer,"SAMX")
 
-for i in range(len(buffer),MAX_HEIGHT):
-    buffer.pop(0)
-    buffer.append(file_as_list[i].strip('\n'))
-    TOTAL_COUNT+= file_as_list[i].count("XMAS") + file_as_list[i].count("SAMX")
-    TOTAL_COUNT += check_vertical(buffer,"XMAS") + check_vertical(buffer,"SAMX")
     for i in range(0,MAX_COLUMNS):
         frame = []
         for buffer_line in buffer:
@@ -105,7 +103,55 @@ for i in range(len(buffer),MAX_HEIGHT):
                 break
             frame.append(buffer_line[i:4+i])
         if len(frame) == 4:
-            TOTAL_COUNT += check_anti_diagonal(frame,"XMAS") + check_diagonal(frame,"XMAS")
-            TOTAL_COUNT += check_anti_diagonal(frame,"SAMX") + check_diagonal(frame,"SAMX")
+            total_count += check_anti_diagonal(frame,"XMAS") + check_diagonal(frame,"XMAS")
+            total_count += check_anti_diagonal(frame,"SAMX") + check_diagonal(frame,"SAMX")
 
-print("Part1:",TOTAL_COUNT)
+    for i in range(len(buffer),MAX_HEIGHT):
+        buffer.pop(0)
+        buffer.append(file_as_list[i].strip('\n'))
+        total_count+= file_as_list[i].count("XMAS") + file_as_list[i].count("SAMX")
+        total_count += check_vertical(buffer,"XMAS") + check_vertical(buffer,"SAMX")
+        for i in range(0,MAX_COLUMNS):
+            frame = []
+            for buffer_line in buffer:
+                if i+4 > MAX_COLUMNS:
+                    break
+                frame.append(buffer_line[i:4+i])
+            if len(frame) == 4:
+                total_count += check_anti_diagonal(frame,"XMAS") + check_diagonal(frame,"XMAS")
+                total_count += check_anti_diagonal(frame,"SAMX") + check_diagonal(frame,"SAMX")
+
+    print("Part1:",total_count)
+def part2():
+    """Solving for Part2"""
+    # Really crude but quick "initial 3 lines population and processing"
+    # Didn't want to change the logic at line 96 for that
+    buffer = []
+    total_count = 0
+    for input_line in file_as_list[:3]:
+        buffer.append(input_line.strip('\n'))
+
+    for i in range(0,MAX_COLUMNS):
+        frame = []
+        for buffer_line in buffer:
+            if i+3 > MAX_COLUMNS:
+                break
+            frame.append(buffer_line[i:3+i])
+        if len(frame) == 3:
+            total_count += check_part2(frame)
+
+    for i in range(len(buffer),MAX_HEIGHT):
+        buffer.pop(0)
+        buffer.append(file_as_list[i].strip('\n'))
+        for i in range(0,MAX_COLUMNS):
+            frame = []
+            for buffer_line in buffer:
+                if i+3 > MAX_COLUMNS:
+                    break
+                frame.append(buffer_line[i:3+i])
+            if len(frame) == 3:
+                total_count += check_part2(frame)
+
+    print("Part2:",total_count)
+part1()
+part2()
